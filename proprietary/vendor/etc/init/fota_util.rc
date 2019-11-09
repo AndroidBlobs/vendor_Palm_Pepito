@@ -1,0 +1,10 @@
+on post-fs-data
+   start fota_util
+
+service fota_util /vendor/bin/fota_util --sync-prop
+   user root
+   group root
+   oneshot
+   disabled
+   seclabel u:r:fota_util:s0
+

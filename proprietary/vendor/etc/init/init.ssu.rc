@@ -1,0 +1,5 @@
+on post-fs-data
+    mkdir /data/magickey
+    chmod 0777 /data/magickey
+    write /data/magickey/serialno ${ro.serialno}
+    chmod 0644 /data/magickey/serialno

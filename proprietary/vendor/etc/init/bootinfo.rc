@@ -1,0 +1,41 @@
+on late-init
+    symlink /cache/mobile_info /mobile_info
+
+on post-fs-data
+    mkdir /cache/mobile_info 0755 system system
+
+    mkdir /mobile_info/klog 0755 system system
+    mkdir /mobile_info/ram_console 0755 system system
+    mkdir /mobile_info/powerup_reason 0755 system system
+
+    restorecon_recursive /cache/mobile_info
+    restorecon_recursive /mobile_info
+
+
+on property:sys.boot_completed=1
+    start bootinfo
+
+
+service bootinfo /vendor/bin/bootinfo
+    class main
+    user system
+    group system
+    oneshot
+    disabled
+
+
+service logcat_boot /system/bin/logcat -r 2048 -n 1 -b all -v threadtime -v usec -v printable -D -f /mobile_info/logcat/logcat.boot
+    class main
+    user system
+    group system
+    disabled
+    oneshot
+
+on property:ro.build.type=eng && property:init.svc.logd=running
+    mkdir /mobile_info/logcat 0700 system system
+    rm /mobile_info/logcat/logcat.boot
+    rm /mobile_info/logcat/logcat.boot.1
+    start logcat_boot
+
+on property:sys.boot_completed=1
+    stop logcat_boot

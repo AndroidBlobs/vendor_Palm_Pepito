@@ -1,0 +1,13 @@
+#Add by wei.yan@tcl.com for start factory_test task5858337
+
+service bt_wlan_daemon /vendor/bin/factory_test_main
+    class main
+    user root
+    group root
+    disabled
+    oneshot
+    seclabel u:r:bt_wlan_daemon:s0
+
+on property:ro.debuggable=1
+    start bt_wlan_daemon
+    

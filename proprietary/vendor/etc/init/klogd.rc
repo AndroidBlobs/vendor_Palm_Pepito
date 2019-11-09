@@ -1,0 +1,5 @@
+service klogd /vendor/bin/klogd
+    class main
+    user system
+    group system
+    seclabel u:r:klogd:s0
